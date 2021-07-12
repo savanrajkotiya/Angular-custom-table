@@ -1,0 +1,75 @@
+@import '../../../../assets/scss/modules/variable.scss';
+
+.table-wrap {
+  .table {
+    position: relative;
+    border: 1px solid $gray-color;
+    text-align: center;
+    
+    tbody {
+      display: block;
+      max-height: calc(100vh - 200px);
+      overflow: auto;
+
+      tr {
+        position: relative;
+        &:nth-of-type(odd) {
+          background: $light-gray-color;
+
+        }
+        &:hover {
+          td {
+            .hover-close {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+
+    thead {
+      th {
+        border: none;
+      }
+    }
+
+    thead,
+    tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+      cursor: move;
+    }
+
+    thead,
+    tbody {
+      tr {
+        cursor: pointer;
+
+        th {
+          position: relative;
+          padding-right: 20px;
+          cursor: pointer;
+          user-select: none;
+
+          .sort-arrow {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            color: $primary-color;
+            img {
+              height: 12px;
+            }
+          }
+        }
+
+        th,
+        td {
+          font-size: 14px;
+          cursor: move;
+        }
+      }
+    }
+  }
+}
+

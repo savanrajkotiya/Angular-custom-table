@@ -1,0 +1,80 @@
+<div class="table-wrap">
+  <div class="table-responsive" [id]="'angular-table'">
+    <table class="table table-sm table-bordered table-hover">
+      <thead>
+        <tr
+          cdkDropList
+          cdkDropListOrientation="horizontal"
+          [cdkDropListData]="selectedColumns"
+          (cdkDragReleased)="release = true"
+          (cdkDropListDropped)="dropCol($event)"
+        >
+          <th
+            style="width: 150px"
+            (click)="onSortingChanged(column)"
+            *ngFor="let column of selectedColumns"
+            cdkDrag
+            (mousedown)="mouseDown($event)"
+            cdkDragLockAxis="x"
+            (cdkDragReleased)="release = true"
+          >
+            <span class="cursor-pointer">{{ column['name'] }}</span>
+            <div *cdkDragPreview>
+              <div [style.width]="pos?.width" [style.margin-top]="pos?.y" [style.margin-left]="pos?.x">
+                <thead>
+                  <tr>
+                    <th>
+                      {{ column['name'] }}
+                    </th>
+                  </tr>
+                </thead>
+              </div>
+            </div>
+            <div class="placeholder" *cdkDragPlaceholder></div>
+            <ng-container *ngIf="column.sortable">
+                            <span class="sort-arrow">
+                                <img *ngIf="column.sortDir === 'desc'" src="../../../../assets/images/icons-down.png"
+                                    alt="">
+                                <img *ngIf="column.sortDir === 'asc'" src="../../../../assets/images/icons-up.png"
+                                    alt="">
+                            </span>
+                        </ng-container>
+          </th>
+        </tr>
+      </thead>
+      <tbody cdkDropList [cdkDropListData]="collection" (cdkDropListDropped)="dropRow($event)">
+        <tr
+          #tr
+          cdkDrag
+          cdkDragLockAxis="y"
+          (mousedown)="mouseDown($event, tr)"
+          (cdkDragReleased)="onDragRelease($event)"
+          *ngFor="let item of collection"
+          (click)="rowClicked(item)"
+          [ngStyle]="{ cursor: !isBackButton && this.isBackButton !== undefined && !isHover ? 'auto' : 'pointer' }"
+        >
+          <ng-container *ngFor="let column of selectedColumns">
+            <ng-container>
+              <td>{{ item[column.id] ? item[column.id] : '' }}</td>
+            </ng-container>
+          </ng-container>
+
+          <div
+            *cdkDragPreview
+            class="preview"
+            [style.margin-top]="pos?.y"
+            [style.margin-left]="pos?.x"
+            [style.width]="pos?.width"
+          >
+            <table>
+              <tr>
+                <td *ngFor="let column of selectedColumns">{{ item[column.id] ? item[column.id] : '' }}</td>
+              </tr>
+            </table>
+          </div>
+          <div class="preview placeholder" *cdkDragPlaceholder></div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
