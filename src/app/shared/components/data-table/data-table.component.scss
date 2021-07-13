@@ -5,7 +5,7 @@
     position: relative;
     border: 1px solid $gray-color;
     text-align: center;
-    
+
     tbody {
       display: block;
       max-height: calc(100vh - 200px);
@@ -15,7 +15,6 @@
         position: relative;
         &:nth-of-type(odd) {
           background: $light-gray-color;
-
         }
         &:hover {
           td {
@@ -72,4 +71,3 @@
     }
   }
 }
-

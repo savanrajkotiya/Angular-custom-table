@@ -1,5 +1,10 @@
 <div class="table-wrap">
   <div class="table-responsive" [id]="'angular-table'">
+    <div class="search-hero" *ngIf="isSearchable">
+      <mat-form-field floatLabel="never">
+        <input matInput [placeholder]="DataTable.searchTextPlaceholder" [(ngModel)]="searchText" autocomplete="off" />
+      </mat-form-field>
+    </div>
     <table class="table table-sm table-bordered table-hover">
       <thead>
         <tr
@@ -32,26 +37,29 @@
             </div>
             <div class="placeholder" *cdkDragPlaceholder></div>
             <ng-container *ngIf="column.sortable">
-                            <span class="sort-arrow">
-                                <img *ngIf="column.sortDir === 'desc'" src="../../../../assets/images/icons-down.png"
-                                    alt="">
-                                <img *ngIf="column.sortDir === 'asc'" src="../../../../assets/images/icons-up.png"
-                                    alt="">
-                            </span>
-                        </ng-container>
+              <span class="sort-arrow">
+                <img *ngIf="column.sortDir === 'desc'" src="../../../../assets/images/icons-down.png" alt="" />
+                <img *ngIf="column.sortDir === 'asc'" src="../../../../assets/images/icons-up.png" alt="" />
+              </span>
+            </ng-container>
           </th>
         </tr>
       </thead>
-      <tbody cdkDropList [cdkDropListData]="collection" (cdkDropListDropped)="dropRow($event)">
+      <tbody
+        cdkDropList
+        [cdkDropListData]="collection"
+        (cdkDropListDropped)="dropRow($event)"
+        *ngIf="(collection | filter: searchText).length > 0; else noResults"
+      >
         <tr
           #tr
           cdkDrag
           cdkDragLockAxis="y"
           (mousedown)="mouseDown($event, tr)"
           (cdkDragReleased)="onDragRelease($event)"
-          *ngFor="let item of collection"
+          *ngFor="let item of collection | filter: searchText; trackBy:collectionTrackBy"
           (click)="rowClicked(item)"
-          [ngStyle]="{ cursor: !isBackButton && this.isBackButton !== undefined && !isHover ? 'auto' : 'pointer' }"
+          [ngStyle]="{ cursor: 'pointer' }"
         >
           <ng-container *ngFor="let column of selectedColumns">
             <ng-container>
@@ -75,6 +83,14 @@
           <div class="preview placeholder" *cdkDragPlaceholder></div>
         </tr>
       </tbody>
+      <ng-template #noResults>
+        <tbody *ngIf="searchText">
+          <p>No results found for "{{ searchText }}".</p>
+        </tbody>
+        <tbody *ngIf="!searchText">
+          <p>No results found.</p>
+        </tbody>
+      </ng-template>
     </table>
   </div>
 </div>
